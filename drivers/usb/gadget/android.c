@@ -111,7 +111,9 @@ static const char longname[] = "Gadget Android";
 static u8 hostaddr[ETH_ALEN];
 #endif
 
+#ifdef CONFIG_USB_AUTO_INSTALL
 extern usb_switch_stru usb_switch_para;
+#endif
 
 /* Default vendor ID, overridden by platform data */
 #define VENDOR_ID		0x18D1
@@ -527,7 +529,9 @@ static int android_switch_composition(u16 pid)
 	func = android_validate_product_id(pid);
 	if (!func) {
 		pr_err("%s: invalid product id %x\n", __func__, pid);
+#ifdef CONFIG_USB_AUTO_INSTALL
 		usb_switch_para.inprogress = 0;
+#endif  /* CONFIG_USB_AUTO_INSTALL */
 		return -EINVAL;
 	}
 
@@ -555,7 +559,9 @@ static int android_switch_composition(u16 pid)
     
 	usb_composite_unregister(&android_usb_driver);
 	ret = usb_composite_register(&android_usb_driver);
+#ifdef CONFIG_USB_AUTO_INSTALL
 	usb_switch_para.inprogress = 0;
+#endif  /* CONFIG_USB_AUTO_INSTALL */
 	return ret;
 }
 

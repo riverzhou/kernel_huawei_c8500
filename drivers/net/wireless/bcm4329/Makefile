@@ -5,7 +5,10 @@ DHDCFLAGS = -DLINUX -DBCMDRIVER -DBCMDONGLEHOST -DDHDTHREAD -DBCMWPA2         \
 	-DSHOW_EVENTS -DBCMSDIO -DDHD_GPL -DBCMLXSDMMC -DBCMPLATFORM_BUS      \
 	-Wall -Wstrict-prototypes -Werror -DOOB_INTR_ONLY -DCUSTOMER_HW2      \
 	-DDHD_USE_STATIC_BUF -DMMC_SDIO_ABORT -DSOFTAP                        \
-	-Idrivers/net/wireless/bcm4329 -Idrivers/net/wireless/bcm4329/include
+	-Idrivers/net/wireless/bcm4329 -Idrivers/net/wireless/bcm4329/include \
+        -Wno-error=unused-but-set-variable \
+        -Wno-error=implicit-function-declaration \
+        -Wno-error=array-bounds
 
 DHDOFILES = dhd_linux.o linux_osl.o bcmutils.o dhd_common.o dhd_custom_gpio.o \
 	wl_iw.o siutils.o sbutils.o aiutils.o hndpmu.o bcmwifi.o dhd_sdio.o   \

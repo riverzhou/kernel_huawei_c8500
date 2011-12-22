@@ -77,9 +77,9 @@
 #include "f_mass_storage.h"
 #include "gadget_chips.h"
 
-#ifdef CONFIG_USB_AUTO_INSTALL
+//#ifdef CONFIG_USB_AUTO_INSTALL
 #include "usb_switch_huawei.h"
-#endif  /* CONFIG_USB_AUTO_INSTALL */
+//#endif  /* CONFIG_USB_AUTO_INSTALL */
 
 #define BULK_BUFFER_SIZE           16384
 
