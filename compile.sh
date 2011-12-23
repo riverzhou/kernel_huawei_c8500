@@ -21,11 +21,19 @@ function mkinitramfs {
 }
 
 function mkbootimg {
-		echo "Creating boot.img..."
-		release/mkbootimg --cmdline 'mem=211M console=ttyMSM2,115200n8 androidboot.hardware=c8500' --kernel arch/arm/boot/zImage --ramdisk release/boot.img-ramdisk.gz -o release/c8500_boot.img || exit 1
-		echo "Smells like bacon... release/c8500_boot.img is ready!"
+	echo "Creating boot.img..."
+	release/mkbootimg --cmdline 'mem=211M console=ttyMSM2,115200n8 androidboot.hardware=c8500' --kernel arch/arm/boot/zImage --ramdisk release/boot.img-ramdisk.gz -o release/c8500_boot.img || exit 1
+	echo "Smells like bacon... release/c8500_boot.img is ready!"
 }
 
-mkinitramfs && mkbootimg
+function copy2cm7 {
+	echo "Copy kernel and modules to cm7 directory ... "
+	cp arch/arm/boot/zImage  	  /river/cm7/device/huawei/c8500/prebuilt/kernel
+	cp drivers/staging/zram/zram.ko   /river/cm7/device/huawei/c8500/prebuilt/lib/modules/zram.ko
+	echo "done."
+}
 
+
+copy2cm7
+mkinitramfs && mkbootimg
 
