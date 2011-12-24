@@ -21,6 +21,11 @@
 #include <linux/tick.h>
 #include <linux/stop_machine.h>
 
+#ifdef WARN_ON
+#undef WARN_ON
+#define WARN_ON(...)
+#endif
+
 /* Structure holding internal timekeeping values. */
 struct timekeeper {
 	/* Current clocksource used for timekeeping. */
