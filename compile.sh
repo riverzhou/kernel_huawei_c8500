@@ -34,6 +34,6 @@ function copy2cm7 {
 }
 
 
-copy2cm7
+#copy2cm7
 mkinitramfs && mkbootimg
 
