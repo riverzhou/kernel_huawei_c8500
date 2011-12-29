@@ -28,12 +28,20 @@ function mkbootimg {
 
 function copy2cm7 {
 	echo "Copy kernel and modules to cm7 directory ... "
-	cp arch/arm/boot/zImage  	  /river/cm7/device/huawei/c8500/prebuilt/kernel
-	cp drivers/staging/zram/zram.ko   /river/cm7/device/huawei/c8500/prebuilt/lib/modules/zram.ko
+	cp arch/arm/boot/zImage  	  		/river/cm7/device/huawei/c8500/prebuilt/kernel
+	cp release/boot.img-ramdisk/init.c8500.rc   	/river/cm7/device/huawei/c8500/prebuilt/init.c8500.rc
+	cp drivers/staging/zram/zram.ko   		/river/cm7/device/huawei/c8500/prebuilt/lib/modules/zram.ko
 	echo "done."
 }
 
+function copy2img {
+	echo "Copy boot.img to recovery image... "
+	cp release/c8500_boot.img 			/river/rom/river/boot.img
+	cp drivers/staging/zram/zram.ko   		/river/rom/river/system/lib/modules/
+	echo "done."
+}
 
-#copy2cm7
-mkinitramfs && mkbootimg
+copy2cm7
+mkinitramfs && mkbootimg || exit
+copy2img
 
