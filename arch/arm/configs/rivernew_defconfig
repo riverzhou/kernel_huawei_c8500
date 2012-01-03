@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Linux kernel version: 2.6.32.9
-# Tue Jan  3 22:46:08 2012
+# Wed Jan  4 01:24:50 2012
 #
 CONFIG_ARM=y
 CONFIG_SYS_SUPPORTS_APM_EMULATION=y
@@ -951,7 +951,7 @@ CONFIG_PROXIMITY_EVERLIGHT_APS_12D=y
 # Hardware I/O ports
 #
 CONFIG_SERIO=y
-CONFIG_SERIO_SERPORT=y
+# CONFIG_SERIO_SERPORT is not set
 # CONFIG_SERIO_LIBPS2 is not set
 # CONFIG_SERIO_RAW is not set
 # CONFIG_GAMEPORT is not set
@@ -1710,7 +1710,7 @@ CONFIG_NLS_CODEPAGE_437=y
 # CONFIG_NLS_CODEPAGE_1250 is not set
 # CONFIG_NLS_CODEPAGE_1251 is not set
 CONFIG_NLS_ASCII=y
-# CONFIG_NLS_ISO8859_1 is not set
+CONFIG_NLS_ISO8859_1=y
 # CONFIG_NLS_ISO8859_2 is not set
 # CONFIG_NLS_ISO8859_3 is not set
 # CONFIG_NLS_ISO8859_4 is not set
