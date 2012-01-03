@@ -5,9 +5,10 @@ on post-fs
    
 on boot
     # cpufreq configurations
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 122880
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 691200
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor ondemand
+
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 61400
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 600000
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor performance
 
     chown bluetooth bluetooth /sys/class/rfkill/rfkill0/state
     chown bluetooth bluetooth /sys/class/rfkill/rfkill0/type
@@ -39,10 +40,7 @@ on boot
     write /sys/bus/platform/drivers/msm_sdcc/msm_sdcc.1/polling 1
 
     # Increase read throughput from sd card
-    write /sys/block/mmcblk0/bdi/read_ahead_kb 4096
-
-    # lowmem killer minfree adjustments
-    write /sys/module/lowmemorykiller/parameters/minfree 1536,3072,4096,7680,8960,10240
+    write /sys/block/mmcblk0/bdi/read_ahead_kb 2048
 
 service qmuxd /system/bin/qmuxd
     
@@ -71,24 +69,24 @@ service iprenew_eth0 /system/bin/dhcpcd -n -d eth0 -dd
     disabled
     oneshot
     
-service akmd /system/bin/akmd2
-    user compass
-    group compass misc input
-    disabled
+#service akmd /system/bin/akmd2
+#    user compass
+#    group compass misc input
+#    disabled
+#
+#service akm8975 /system/bin/akmd8975
+#    user compass
+#    group compass misc input
+#    disabled
+#
+#service akm8962 /system/bin/akmd8962
+#    user compass
+#    group compass misc input
+#    disabled
 
-service akm8975 /system/bin/akmd8975
-    user compass
-    group compass misc input
-    disabled
-
-service akm8962 /system/bin/akmd8962
-    user compass
-    group compass misc input
-    disabled
-
-#by geno
 service geno /sbin/geno
     oneshot
+
 service optimize /sbin/odex
     disabled
     oneshot
@@ -99,10 +97,10 @@ service timing /sbin/timing
 on property:dev.bootcomplete=1
     start optimize
     start timing
-#by geno
 
 # bugreport is triggered by the KEY_VOLUMEUP and KEY_CENTER keycodes
 service bugreport /system/bin/dumpstate -d -v -o /sdcard/bugreports/bugreport
     disabled
     oneshot
     keycodes 115 232
+

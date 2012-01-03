@@ -2,7 +2,7 @@
 
 DATE=`date +%Y%m%d`
 
-function setenv {
+function fsetenv {
 	echo -n "Setting ARM environment..."
 	export CFLAGS="-O2 -Os -floop-interchange -floop-strip-mine -floop-block"
 	echo " done."
@@ -15,18 +15,18 @@ function setenv {
 	echo " done."
 }
 
-function mkinitramfs {
+function fmkinitramfs {
 	echo "Zipping ramdisk..."
 	release/mkbootfs release/boot.img-ramdisk | gzip > release/boot.img-ramdisk.gz
 }
 
-function mkbootimg {
+function fmkbootimg {
 	echo "Creating boot.img..."
-	release/mkbootimg --cmdline 'mem=211M console=ttyMSM2,115200n8 androidboot.hardware=c8500' --kernel arch/arm/boot/zImage --ramdisk release/boot.img-ramdisk.gz -o release/c8500_boot.img || exit 1
+	mkbootimg --base 0x00200000 --pagesize 4096 --cmdline 'mem=211M console=ttyMSM2,115200n8 androidboot.hardware=c8500' --kernel arch/arm/boot/zImage --ramdisk release/boot.img-ramdisk.gz -o release/c8500_boot.img || exit 1
 	echo "Smells like bacon... release/c8500_boot.img is ready!"
 }
 
-function copy2cm7 {
+function fcopy2cm7 {
 	echo "Copy kernel and modules to cm7 directory ... "
 	cp arch/arm/boot/zImage  	  		/river/cm7/device/huawei/c8500/prebuilt/kernel
 	cp release/boot.img-ramdisk/init.c8500.rc   	/river/cm7/device/huawei/c8500/prebuilt/init.c8500.rc
@@ -34,14 +34,14 @@ function copy2cm7 {
 	echo "done."
 }
 
-function copy2img {
+function fcopy2img {
 	echo "Copy boot.img to recovery image... "
 	cp release/c8500_boot.img 			/river/rom/river/boot.img
-	cp drivers/staging/zram/zram.ko   		/river/rom/river/system/lib/modules/
+#	cp drivers/staging/zram/zram.ko   		/river/rom/river/system/lib/modules/
 	echo "done."
 }
 
-copy2cm7
-mkinitramfs && mkbootimg || exit
-copy2img
+#fcopy2cm7
+fmkinitramfs && fmkbootimg || exit
+fcopy2img
 

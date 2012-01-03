@@ -177,6 +177,7 @@ sub parse_header {
 
     # Print important values
     printf "Page size: %d (0x%08x)\n", $p_size, $p_size;
+    printf "Kernel addr: %d (0x%08x)\n",$k_addr, $k_addr - 0x8000;
     printf "Kernel size: %d (0x%08x)\n", $k_size, $k_size;
     printf "Ramdisk size: %d (0x%08x)\n", $r_size, $r_size;
     printf "Second size: %d (0x%08x)\n", $s_size, $s_size;
