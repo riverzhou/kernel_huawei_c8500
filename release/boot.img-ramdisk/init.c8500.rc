@@ -69,11 +69,11 @@ service iprenew_eth0 /system/bin/dhcpcd -n -d eth0 -dd
     disabled
     oneshot
     
-#service akmd /system/bin/akmd2
-#    user compass
-#    group compass misc input
-#    disabled
-#
+service akmd /system/bin/akmd2
+    user compass
+    group compass misc input
+    disabled
+
 #service akm8975 /system/bin/akmd8975
 #    user compass
 #    group compass misc input
