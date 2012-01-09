@@ -226,6 +226,8 @@ inline static int target_freq(struct cpufreq_policy *policy, struct smartass_inf
 	int index, target;
 	struct cpufreq_frequency_table *table = this_smartass->freq_table;
 
+	int save = new_freq;
+
 	if (new_freq == old_freq)
 		return 0;
 	new_freq = validate_freq(policy,new_freq);
@@ -255,8 +257,8 @@ inline static int target_freq(struct cpufreq_policy *policy, struct smartass_inf
 			// We should not get here:
 			// If we got here we tried to change to a validated new_freq which is different
 			// from old_freq, so there is no reason for us to remain at same frequency.
-			printk(KERN_WARNING "Smartass: frequency change failed: %d to %d => %d\n",
-			       old_freq,new_freq,target);
+			//printk(KERN_WARNING "Smartass: frequency change failed: %d to %d => %d\n", old_freq,new_freq,target);
+			printk(KERN_WARNING "Smartass: frequency change failed: [%d]  %d to %d => %d\n", save, old_freq,new_freq,target);
 			return 0;
 		}
 	}
@@ -425,6 +427,8 @@ static void cpufreq_smartass_freq_change_time_work(struct work_struct *work)
 				// scaling of load vs. frequency, the load in the new frequency
 				// will be max_cpu_load:
 				new_freq = old_freq * this_smartass->cur_cpu_load / max_cpu_load;
+
+				//printk(KERN_WARNING "Smartass: frequency: new %d = old %d * cur_cpu %d / max_cpu %d \n", new_freq , old_freq ,this_smartass->cur_cpu_load, max_cpu_load);
 				if (new_freq > old_freq) // min_cpu_load > max_cpu_load ?!
 					new_freq = old_freq -1;
 			}
@@ -444,6 +448,8 @@ static void cpufreq_smartass_freq_change_time_work(struct work_struct *work)
 			new_freq = 0;
 		}
 		else {
+			if(new_freq > policy->max) new_freq = policy->max;
+			if(new_freq < policy->min) new_freq = policy->min;
 			new_freq = target_freq(policy,this_smartass,new_freq,old_freq,relation);
 		}
 
