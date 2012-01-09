@@ -60,7 +60,7 @@ static unsigned int sleep_ideal_freq;
  * Zero disables and causes to always jump straight to max frequency.
  * When below the ideal freqeuncy we always ramp up to the ideal freq.
  */
-#define DEFAULT_RAMP_UP_STEP 0
+#define DEFAULT_RAMP_UP_STEP 128000
 static unsigned int ramp_up_step;
 
 /*
@@ -258,7 +258,7 @@ inline static int target_freq(struct cpufreq_policy *policy, struct smartass_inf
 			// If we got here we tried to change to a validated new_freq which is different
 			// from old_freq, so there is no reason for us to remain at same frequency.
 			//printk(KERN_WARNING "Smartass: frequency change failed: %d to %d => %d\n", old_freq,new_freq,target);
-			printk(KERN_WARNING "policy->max %d , policy->min %d \n", policy->max , policy->min);
+			//printk(KERN_WARNING "policy->max %d , policy->min %d \n", policy->max , policy->min);
 			printk(KERN_WARNING "Smartass: frequency change failed: [%d]  %d to %d => %d\n", save, old_freq,new_freq,target);
 			return 0;
 		}
