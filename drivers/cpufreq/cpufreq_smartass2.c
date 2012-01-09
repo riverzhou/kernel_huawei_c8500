@@ -68,7 +68,7 @@ static unsigned int ramp_up_step;
  * Zero disables and will calculate ramp down according to load heuristic.
  * When above the ideal freqeuncy we always ramp down to the ideal freq.
  */
-#define DEFAULT_RAMP_DOWN_STEP 122880
+#define DEFAULT_RAMP_DOWN_STEP 0
 static unsigned int ramp_down_step;
 
 /*
@@ -255,7 +255,7 @@ inline static int target_freq(struct cpufreq_policy *policy, struct smartass_inf
 			// We should not get here:
 			// If we got here we tried to change to a validated new_freq which is different
 			// from old_freq, so there is no reason for us to remain at same frequency.
-			dprintk(SMARTASS_DEBUG_ALG, "Smartass: frequency change failed: %d to %d => %d\n",
+			printk(KERNEL_WARNING, "Smartass: frequency change failed: %d to %d => %d\n",
 			       old_freq,new_freq,target);
 			return 0;
 		}
@@ -440,7 +440,13 @@ static void cpufreq_smartass_freq_change_time_work(struct work_struct *work)
 		}
 
 		// do actual ramp up (returns 0, if frequency change failed):
-		new_freq = target_freq(policy,this_smartass,new_freq,old_freq,relation);
+		if(new_freq == old_freq) {
+			new_freq = 0;
+		}
+		else {
+			new_freq = target_freq(policy,this_smartass,new_freq,old_freq,relation);
+		}
+
 		if (new_freq)
 			this_smartass->freq_change_time_in_idle =
 				get_cpu_idle_time_us(cpu,&this_smartass->freq_change_time);
