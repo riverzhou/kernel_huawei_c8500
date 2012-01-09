@@ -43,5 +43,5 @@ function fcopy2img {
 
 #fcopy2cm7
 fmkinitramfs && fmkbootimg || exit
-#fcopy2img
+fcopy2img
 
