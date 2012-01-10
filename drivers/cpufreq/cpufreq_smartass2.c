@@ -226,49 +226,36 @@ inline static int target_freq(struct cpufreq_policy *policy, struct smartass_inf
 	int index, target;
 	struct cpufreq_frequency_table *table = this_smartass->freq_table;
 
-	int save = new_freq;
-
 	if (new_freq == old_freq)
 		return 0;
 	new_freq = validate_freq(policy,new_freq);
 	if (new_freq == old_freq)
 		return 0;
 
-	if (table &&
-	    !cpufreq_frequency_table_target(policy,table,new_freq,prefered_relation,&index))
-	{
+	if (table && !cpufreq_frequency_table_target(policy,table,new_freq,prefered_relation,&index)) {
 		target = table[index].frequency;
 		if (target == old_freq) {
-			// if for example we are ramping up to *at most* current + ramp_up_step
-			// but there is no such frequency higher than the current, try also
-			// to ramp up to *at least* current + ramp_up_step.
-			if (new_freq > old_freq && prefered_relation==CPUFREQ_RELATION_H
-			    && !cpufreq_frequency_table_target(policy,table,new_freq,
-							       CPUFREQ_RELATION_L,&index))
+			// if for example we are ramping up to *at most* current + ramp_up_step but there is no such frequency higher than the current, try also to ramp up to *at least* current + ramp_up_step.
+			if (new_freq > old_freq && prefered_relation==CPUFREQ_RELATION_H && !cpufreq_frequency_table_target(policy,table,new_freq, CPUFREQ_RELATION_L,&index))
 				target = table[index].frequency;
 			// simlarly for ramping down:
-			else if (new_freq < old_freq && prefered_relation==CPUFREQ_RELATION_L
-				&& !cpufreq_frequency_table_target(policy,table,new_freq,
-								   CPUFREQ_RELATION_H,&index))
+			else if (new_freq < old_freq && prefered_relation==CPUFREQ_RELATION_L && !cpufreq_frequency_table_target(policy,table,new_freq, CPUFREQ_RELATION_H,&index))
 				target = table[index].frequency;
 		}
 
 		if (target == old_freq) {
-			// We should not get here:
-			// If we got here we tried to change to a validated new_freq which is different
-			// from old_freq, so there is no reason for us to remain at same frequency.
-			//printk(KERN_WARNING "Smartass: frequency change failed: %d to %d => %d\n", old_freq,new_freq,target);
-			//printk(KERN_WARNING "policy->max %d , policy->min %d \n", policy->max , policy->min);
-			printk(KERN_WARNING "Smartass: frequency change failed: [%d]  %d to %d => %d\n", save, old_freq,new_freq,target);
+			// We should not get here: If we got here we tried to change to a validated new_freq which is different from old_freq, so there is no reason for us to remain at same frequency.
+			printk(KERN_WARNING "Smartass: frequency change failed: %d to %d => %d\n", old_freq,new_freq,target);
 			return 0;
 		}
 	}
-	else target = new_freq;
+	else {
+		target = new_freq;
+	}
 
 	__cpufreq_driver_target(policy, target, prefered_relation);
 
-	dprintk(SMARTASS_DEBUG_JUMPS,"SmartassQ: jumping from %d to %d => %d (%d)\n",
-		old_freq,new_freq,target,policy->cur);
+	dprintk(SMARTASS_DEBUG_JUMPS,"SmartassQ: jumping from %d to %d => %d (%d)\n", old_freq,new_freq,target,policy->cur);
 
 	return target;
 }
@@ -445,18 +432,10 @@ static void cpufreq_smartass_freq_change_time_work(struct work_struct *work)
 		}
 
 		// do actual ramp up (returns 0, if frequency change failed):
-		if(new_freq == old_freq) {
-			new_freq = 0;
-		}
-		else {
-			if(new_freq > policy->max) new_freq = policy->max;
-			if(new_freq < policy->min) new_freq = policy->min;
-			new_freq = target_freq(policy,this_smartass,new_freq,old_freq,relation);
-		}
+		new_freq = target_freq(policy,this_smartass,new_freq,old_freq,relation);
 
 		if (new_freq)
-			this_smartass->freq_change_time_in_idle =
-				get_cpu_idle_time_us(cpu,&this_smartass->freq_change_time);
+			this_smartass->freq_change_time_in_idle = get_cpu_idle_time_us(cpu,&this_smartass->freq_change_time);
 
 		// reset timer:
 		if (new_freq < policy->max)
