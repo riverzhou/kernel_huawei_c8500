@@ -22,7 +22,8 @@ function fmkinitramfs {
 
 function fmkbootimg {
 	echo "Creating boot.img..."
-	mkbootimg --base 0x00200000 --pagesize 4096 --cmdline 'mem=211M console=ttyMSM2,115200n8 androidboot.hardware=c8500' --kernel arch/arm/boot/zImage --ramdisk release/boot.img-ramdisk.gz -o release/c8500_boot.img || exit 1
+#	mkbootimg --base 0x00200000 --pagesize 4096 --cmdline 'mem=211M console=ttyMSM2,115200n8 androidboot.hardware=c8500' --kernel arch/arm/boot/zImage --ramdisk release/boot.img-ramdisk.gz -o release/c8500_boot.img || exit 1
+	mkbootimg --base 0x00200000 --pagesize 4096 --cmdline 'mem=211M no_console_suspend=1 console=null androidboot.hardware=c8500' --kernel arch/arm/boot/zImage --ramdisk release/boot.img-ramdisk.gz -o release/c8500_boot.img || exit 1
 	echo "Smells like bacon... release/c8500_boot.img is ready!"
 }
 
@@ -30,7 +31,7 @@ function fcopy2cm7 {
 	echo "Copy kernel and modules to cm7 directory ... "
 	cp arch/arm/boot/zImage  	  		/river/cm7/device/huawei/c8500/prebuilt/kernel
 	cp release/boot.img-ramdisk/init.c8500.rc   	/river/cm7/device/huawei/c8500/prebuilt/init.c8500.rc
-	cp drivers/staging/zram/zram.ko   		/river/cm7/device/huawei/c8500/prebuilt/lib/modules/zram.ko
+#	cp drivers/staging/zram/zram.ko   		/river/cm7/device/huawei/c8500/prebuilt/lib/modules/zram.ko
 	echo "done."
 }
 
