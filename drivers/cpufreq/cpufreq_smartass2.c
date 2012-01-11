@@ -52,7 +52,7 @@ static unsigned int awake_ideal_freq;
  * that practically when sleep_ideal_freq==0 the awake_ideal_freq is used
  * also when suspended).
  */
-#define DEFAULT_SLEEP_IDEAL_FREQ 122880
+#define DEFAULT_SLEEP_IDEAL_FREQ 30720
 static unsigned int sleep_ideal_freq;
 
 /*
@@ -415,8 +415,7 @@ static void cpufreq_smartass_freq_change_time_work(struct work_struct *work)
 				// scaling of load vs. frequency, the load in the new frequency
 				// will be max_cpu_load:
 				new_freq = old_freq * this_smartass->cur_cpu_load / max_cpu_load;
-
-				//printk(KERN_WARNING "Smartass: frequency: new %d = old %d * cur_cpu %d / max_cpu %d \n", new_freq , old_freq ,this_smartass->cur_cpu_load, max_cpu_load);
+				dprintk(SMARTASS_DEBUG_ALG, "Smartass: frequency: new %d = old %d * cur_cpu %d / max_cpu %d \n", new_freq , old_freq ,this_smartass->cur_cpu_load, max_cpu_load);
 				if (new_freq > old_freq) // min_cpu_load > max_cpu_load ?!
 					new_freq = old_freq -1;
 			}
@@ -427,8 +426,7 @@ static void cpufreq_smartass_freq_change_time_work(struct work_struct *work)
 		       // before the work task gets to run?
 		       // This may also happen if we refused to ramp up because the nr_running()==1
 			new_freq = old_freq;
-			dprintk(SMARTASS_DEBUG_ALG,"smartassQ @ %d nothing: ramp_dir=%d nr_running=%lu\n",
-				old_freq,ramp_dir,nr_running());
+			dprintk(SMARTASS_DEBUG_ALG,"smartassQ @ %d nothing: ramp_dir=%d nr_running=%lu\n", old_freq,ramp_dir,nr_running());
 		}
 
 		// do actual ramp up (returns 0, if frequency change failed):
